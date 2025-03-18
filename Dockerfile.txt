@@ -1,0 +1,21 @@
+# Use a imagem oficial do .NET SDK para compilar a aplicação
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /app
+
+# Copie os arquivos de projeto e restaure as dependências
+COPY *.sln .
+COPY Desafio_Jogo_De_Baralho/*.csproj Desafio_Jogo_De_Baralho/
+COPY Desafio_Jogo_De_Baralho_Testes/*.csproj Desafio_Jogo_De_Baralho_Testes/
+RUN dotnet restore
+
+# Copie o restante do código e compile a aplicação
+COPY Desafio_Jogo_De_Baralho/. Desafio_Jogo_De_Baralho/
+COPY Desafio_Jogo_De_Baralho_Testes/. Desafio_Jogo_De_Baralho_Testes/
+RUN dotnet build --no-restore -c Release
+RUN dotnet publish --no-restore -c Release -o /app/publish
+
+# Use a imagem oficial do .NET Runtime para rodar a aplicação
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS runtime
+WORKDIR /app
+COPY --from=build /app/publish .
+ENTRYPOINT ["dotnet", "Desafio_Jogo_De_Baralho.dll"]

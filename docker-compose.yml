@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  desafio_jogo_de_baralho:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:80"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+
+  api_consumer:
+    image: mcr.microsoft.com/dotnet/sdk:8.0
+    working_dir: /app
+    volumes:
+      - ./ApiConsumer:/app
+    depends_on:
+      - desafio_jogo_de_baralho
+    entrypoint: ["dotnet", "run"]

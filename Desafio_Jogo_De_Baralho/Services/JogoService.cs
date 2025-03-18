@@ -16,45 +16,78 @@ namespace Desafio_Jogo_De_Baralho.Services
 
         public async Task<Baralho> CriarBaralhoAsync()
         {
-            return await _clienteApi.CriarBaralhoAsync();
+            try
+            {
+                return await _clienteApi.CriarBaralhoAsync();
+            }
+            catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException)
+            {
+                throw new ApiException("A API está fora do ar. Tente novamente mais tarde.");
+            }
         }
 
         public async Task<List<Jogador>> DistribuirCartasAsync(string deckId, int numeroDeJogadores)
         {
-            if (numeroDeJogadores > MaxJogadores)
+            if (numeroDeJogadores < 1)
             {
+                throw new ApiException("O número de jogadores deve ser pelo menos 1.");
+            }
+
+            if (numeroDeJogadores > MaxJogadores)
+            {              
                 throw new ApiException($"O número máximo de jogadores é {MaxJogadores}.");
             }
 
-            var baralho = await _clienteApi.ObterBaralhoAsync(deckId);
-            if (baralho == null)
+            try
             {
-                throw new ApiException($"Baralho com ID {deckId} não encontrado.");
-            }
+                var baralho = await _clienteApi.ObterBaralhoAsync(deckId);
+                if (baralho == null)
+                {
+                    throw new ApiException($"Baralho com ID {deckId} não encontrado.");
+                }
 
-            if (baralho.CartasRestantes != 52)
+                if (baralho.CartasRestantes != 52)
+                {
+                    throw new ApiException("As cartas só podem ser distribuídas novamente se o baralho for embaralhado.");
+                }
+
+                var jogadores = new List<Jogador>();
+                for (int i = 0; i < numeroDeJogadores; i++)
+                {
+                    var cartas = await _clienteApi.DistribuirCartasAsync(deckId, 5);
+                    jogadores.Add(new Jogador { Nome = $"Jogador {i + 1}", Cartas = cartas });
+                }
+
+                return jogadores;
+            }
+            catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException)
             {
-                throw new ApiException("As cartas só podem ser distribuídas novamente se o baralho for embaralhado.");
+                throw new ApiException("A API está fora do ar. Tente novamente mais tarde.");
             }
-
-            var jogadores = new List<Jogador>();
-            for (int i = 0; i < numeroDeJogadores; i++)
-            {
-                var cartas = await _clienteApi.DistribuirCartasAsync(deckId, 5);
-                jogadores.Add(new Jogador { Nome = $"Jogador {i + 1}", Cartas = cartas });
-            }
-
-            return jogadores;
         }
 
         public async Task<Baralho> ObterBaralhoAsync(string deckId)
         {
-            return await _clienteApi.ObterBaralhoAsync(deckId);
+            try
+            {
+                return await _clienteApi.ObterBaralhoAsync(deckId);
+            }
+            catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException)
+            {
+                throw new ApiException("A API está fora do ar. Tente novamente mais tarde.");
+            }
         }
 
         public async Task<Baralho> EmbaralharCartasAsync(string deckId)
         {
-            return await _clienteApi.EmbaralharCartasAsync(deckId); ;
+            try
+            {
+                return await _clienteApi.EmbaralharCartasAsync(deckId);
+            }
+            catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException)
+            {
+                throw new ApiException("A API está fora do ar. Tente novamente mais tarde.");
+            }
         }
 
         public async Task<(List<(Jogador jogador, Carta carta)> vencedores, string resultado)> CompararCartasAsync(List<Jogador> jogadores)
@@ -107,8 +140,15 @@ namespace Desafio_Jogo_De_Baralho.Services
 
         public async Task<Baralho> FinalizarJogoAsync(string deckId)
         {
-            var response = await _clienteApi.FinalizarJogoAsync(deckId);
-            return response;
+            try
+            {
+                var response = await _clienteApi.FinalizarJogoAsync(deckId);
+                return response;
+            }
+            catch (Exception ex) when (ex is HttpRequestException || ex is TaskCanceledException)
+            {
+                throw new ApiException("A API está fora do ar. Tente novamente mais tarde.");
+            }
         }
     }
 }

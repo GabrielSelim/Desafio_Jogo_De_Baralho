@@ -31,6 +31,21 @@ namespace Desafio_Jogo_De_Baralho.Tests
             Assert.Equal(baralho.Id, returnValue.Id);
         }
 
+        [Fact(DisplayName = "DistribuirCartas deve retornar BadRequest se a API estiver fora do ar")]
+        public async Task DistribuirCartas_ReturnsBadRequest_IfApiIsDown()
+        {
+            var deckId = "deck1";
+            var numeroDeJogadores = 4;
+
+            _jogoServiceMock.Setup(service => service.DistribuirCartasAsync(deckId, numeroDeJogadores))
+                .ThrowsAsync(new ApiException("A API está fora do ar. Tente novamente mais tarde."));
+
+            var result = await _controller.DistribuirCartas(deckId, numeroDeJogadores);
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+            var returnValue = Assert.IsType<ApiErrorResponse>(badRequestResult.Value);
+            Assert.Equal("A API está fora do ar. Tente novamente mais tarde.", returnValue.Mensagem);
+        }
 
         [Fact(DisplayName = "DistribuirCartas deve retornar OkResult com a lista de jogadores")]
         public async Task DistribuirCartas_ReturnsOkResult_WithJogadores()
@@ -49,11 +64,27 @@ namespace Desafio_Jogo_De_Baralho.Tests
             Assert.Equal(2, returnValue.Count);
         }
 
+        [Fact(DisplayName = "DistribuirCartas deve retornar BadRequest se o número de jogadores for menor que 1")]
+        public async Task DistribuirCartas_ReturnsBadRequest_IfNumeroDeJogadoresIsLessThanOne()
+        {
+            var deckId = "deck1";
+            var numeroDeJogadores = 0;
+
+            _jogoServiceMock.Setup(service => service.DistribuirCartasAsync(deckId, numeroDeJogadores))
+                .ThrowsAsync(new ApiException("O número de jogadores deve ser pelo menos 1."));
+
+            var result = await _controller.DistribuirCartas(deckId, numeroDeJogadores);
+
+            var badRequestResult = Assert.IsType<BadRequestObjectResult>(result.Result);
+            var returnValue = Assert.IsType<ApiErrorResponse>(badRequestResult.Value);
+            Assert.Equal("O número de jogadores deve ser pelo menos 1.", returnValue.Mensagem);
+        }
+
         [Fact(DisplayName = "DistribuirCartas deve retornar BadRequest se o número de jogadores for maior que o máximo permitido")]
         public async Task DistribuirCartas_ReturnsBadRequest_IfNumeroDeJogadoresExceedsMax()
         {
             var deckId = "deck1";
-            var numeroDeJogadores = 11; // Excede o máximo permitido
+            var numeroDeJogadores = 11;
 
             _jogoServiceMock.Setup(service => service.DistribuirCartasAsync(deckId, numeroDeJogadores))
                 .ThrowsAsync(new ApiException("O número máximo de jogadores é 10."));
