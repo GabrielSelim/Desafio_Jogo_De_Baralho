@@ -7,7 +7,7 @@ services:
       dockerfile: Desafio_Jogo_De_Baralho/Dockerfile
     image: desafio_jogo_de_baralho_api
     ports:
-      - "5000:80"
+      - "5000:5000"
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
 
