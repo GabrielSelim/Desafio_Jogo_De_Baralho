@@ -19,7 +19,7 @@ WORKDIR /app
 COPY --from=build /app/Desafio_Jogo_De_Baralho/out .
 
 # Exponha a porta que a aplicação irá rodar
-EXPOSE 80
+EXPOSE 5000
 
 # Comando para rodar a aplicação
 ENTRYPOINT ["dotnet", "Desafio_Jogo_De_Baralho.Api.dll"]
