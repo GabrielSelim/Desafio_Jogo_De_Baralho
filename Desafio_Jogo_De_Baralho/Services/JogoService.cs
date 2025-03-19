@@ -103,19 +103,31 @@ namespace Desafio_Jogo_De_Baralho.Services
 
             foreach (var jogador in jogadores)
             {
+                Carta melhorCarta = null;
+                int valorMelhorCarta = 0;
+
                 foreach (var carta in jogador.Cartas)
                 {
                     ValidarCarta(carta, valores);
 
-                    if (valores[carta.Valor] > maiorValor)
+                    if (valores[carta.Valor] > valorMelhorCarta)
                     {
-                        maiorValor = valores[carta.Valor];
-                        vencedores.Clear();
-                        vencedores.Add((jogador, carta));
+                        valorMelhorCarta = valores[carta.Valor];
+                        melhorCarta = carta;
                     }
-                    else if (valores[carta.Valor] == maiorValor)
+                }
+
+                if (melhorCarta != null)
+                {
+                    if (valorMelhorCarta > maiorValor)
                     {
-                        vencedores.Add((jogador, carta));
+                        maiorValor = valorMelhorCarta;
+                        vencedores.Clear();
+                        vencedores.Add((jogador, melhorCarta));
+                    }
+                    else if (valorMelhorCarta == maiorValor)
+                    {
+                        vencedores.Add((jogador, melhorCarta));
                     }
                 }
             }
