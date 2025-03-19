@@ -64,7 +64,7 @@ namespace Desafio_Jogo_De_Baralho.Testes
             Assert.Equal(2, returnValue.Count);
         }
 
-        [Fact(DisplayName = "DistribuirCartas deve retornar BadRequest se o número de jogadores for menor que 1")]
+        [Fact(DisplayName = "DistribuirCartas deve retornar BadRequest se o número de jogadores for menor que 2")]
         public async Task DistribuirCartas_ReturnsBadRequest_IfNumeroDeJogadoresIsLessThanOne()
         {
             var deckId = "deck1";

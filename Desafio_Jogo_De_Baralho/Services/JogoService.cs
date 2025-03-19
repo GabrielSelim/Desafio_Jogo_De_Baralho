@@ -28,9 +28,9 @@ namespace Desafio_Jogo_De_Baralho.Services
 
         public async Task<List<Jogador>> DistribuirCartasAsync(string deckId, int numeroDeJogadores)
         {
-            if (numeroDeJogadores < 1)
+            if (numeroDeJogadores < 2)
             {
-                throw new ApiException("O número de jogadores deve ser pelo menos 1.");
+                throw new ApiException("O número de jogadores deve ser pelo menos 2.");
             }
 
             if (numeroDeJogadores > MaxJogadores)
