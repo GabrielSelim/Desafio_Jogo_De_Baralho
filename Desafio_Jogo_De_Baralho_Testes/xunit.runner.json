@@ -1,0 +1,6 @@
+﻿{
+    "diagnosticMessages": true,
+    "internalDiagnosticMessages": true,
+    "methodDisplay": "classAndMethod",
+    "methodDisplayOptions": "all"
+}

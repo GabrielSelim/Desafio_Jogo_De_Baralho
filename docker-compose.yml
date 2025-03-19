@@ -20,4 +20,7 @@ services:
       - api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-    command: ["dotnet", "test"]
+    volumes:
+      - ./logs:/app/logs
+      - ./TestResults:/app/Desafio_Jogo_De_Baralho_Testes/TestResults
+    command: ["dotnet", "test", "--logger:trx;LogFileName=TestResults/test_results.trx"]

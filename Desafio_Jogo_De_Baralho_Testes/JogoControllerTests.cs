@@ -1,9 +1,11 @@
 using Desafio_Jogo_De_Baralho.Controllers;
+using Desafio_Jogo_De_Baralho.Exceptions;
 using Desafio_Jogo_De_Baralho.Interfaces;
 using Desafio_Jogo_De_Baralho.Models;
-using Desafio_Jogo_De_Baralho.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Serilog;
+using Xunit;
 
 namespace Desafio_Jogo_De_Baralho.Testes
 {
@@ -11,16 +13,24 @@ namespace Desafio_Jogo_De_Baralho.Testes
     {
         private readonly Mock<IJogoService> _jogoServiceMock;
         private readonly JogoController _controller;
+        private readonly ILogger _logger;
 
         public JogoControllerTests()
         {
             _jogoServiceMock = new Mock<IJogoService>();
             _controller = new JogoController(_jogoServiceMock.Object);
+
+            // Configurar o Serilog para registrar mensagens em um arquivo
+            _logger = new LoggerConfiguration()
+                .WriteTo.File("logs/test_log.txt", rollingInterval: RollingInterval.Day)
+                .CreateLogger();
         }
 
         [Fact(DisplayName = "CriarBaralho deve retornar OkResult com o Baralho criado")]
         public async Task CriarBaralho_ReturnsOkResult_WithBaralho()
         {
+            _logger.Information("Executando teste: CriarBaralho_ReturnsOkResult_WithBaralho");
+
             var baralho = new Baralho { Id = "deck1", Embaralhado = true, CartasRestantes = 52 };
             _jogoServiceMock.Setup(service => service.CriarBaralhoAsync()).ReturnsAsync(baralho);
 
@@ -34,6 +44,8 @@ namespace Desafio_Jogo_De_Baralho.Testes
         [Fact(DisplayName = "DistribuirCartas deve retornar BadRequest se a API estiver fora do ar")]
         public async Task DistribuirCartas_ReturnsBadRequest_IfApiIsDown()
         {
+            _logger.Information("Executando teste: DistribuirCartas_ReturnsBadRequest_IfApiIsDown");
+
             var deckId = "deck1";
             var numeroDeJogadores = 4;
 
@@ -50,6 +62,8 @@ namespace Desafio_Jogo_De_Baralho.Testes
         [Fact(DisplayName = "DistribuirCartas deve retornar OkResult com a lista de jogadores")]
         public async Task DistribuirCartas_ReturnsOkResult_WithJogadores()
         {
+            _logger.Information("Executando teste: DistribuirCartas_ReturnsOkResult_WithJogadores");
+
             var jogadores = new List<Jogador>
             {
                 new Jogador { Nome = "Jogador 1", Cartas = new List<Carta>() },
@@ -67,6 +81,8 @@ namespace Desafio_Jogo_De_Baralho.Testes
         [Fact(DisplayName = "DistribuirCartas deve retornar BadRequest se o número de jogadores for menor que 2")]
         public async Task DistribuirCartas_ReturnsBadRequest_IfNumeroDeJogadoresIsLessThanOne()
         {
+            _logger.Information("Executando teste: DistribuirCartas_ReturnsBadRequest_IfNumeroDeJogadoresIsLessThanOne");
+
             var deckId = "deck1";
             var numeroDeJogadores = 0;
 
@@ -83,6 +99,8 @@ namespace Desafio_Jogo_De_Baralho.Testes
         [Fact(DisplayName = "DistribuirCartas deve retornar BadRequest se o número de jogadores for maior que o máximo permitido")]
         public async Task DistribuirCartas_ReturnsBadRequest_IfNumeroDeJogadoresExceedsMax()
         {
+            _logger.Information("Executando teste: DistribuirCartas_ReturnsBadRequest_IfNumeroDeJogadoresExceedsMax");
+
             var deckId = "deck1";
             var numeroDeJogadores = 11;
 
@@ -99,6 +117,8 @@ namespace Desafio_Jogo_De_Baralho.Testes
         [Fact(DisplayName = "DistribuirCartas deve retornar BadRequest se o baralho não for encontrado")]
         public async Task DistribuirCartas_ReturnsBadRequest_IfDeckNotFound()
         {
+            _logger.Information("Executando teste: DistribuirCartas_ReturnsBadRequest_IfDeckNotFound");
+
             var deckId = "invalidDeckId";
             var numeroDeJogadores = 4;
 
@@ -115,6 +135,8 @@ namespace Desafio_Jogo_De_Baralho.Testes
         [Fact(DisplayName = "DistribuirCartas deve retornar BadRequest se o baralho não tiver 52 cartas")]
         public async Task DistribuirCartas_ReturnsBadRequest_IfDeckNotFull()
         {
+            _logger.Information("Executando teste: DistribuirCartas_ReturnsBadRequest_IfDeckNotFull");
+
             var deckId = "testDeckId";
             var numeroDeJogadores = 4;
 
@@ -131,6 +153,8 @@ namespace Desafio_Jogo_De_Baralho.Testes
         [Fact(DisplayName = "EmbaralharCartas deve retornar OkResult com o Baralho embaralhado")]
         public async Task EmbaralharCartas_ReturnsOkResult_WithBaralho()
         {
+            _logger.Information("Executando teste: EmbaralharCartas_ReturnsOkResult_WithBaralho");
+
             var baralho = new Baralho { Id = "deck1", Embaralhado = true, CartasRestantes = 52 };
             _jogoServiceMock.Setup(service => service.EmbaralharCartasAsync("deck1")).ReturnsAsync(baralho);
 
@@ -144,6 +168,8 @@ namespace Desafio_Jogo_De_Baralho.Testes
         [Fact(DisplayName = "CompararCartas deve retornar OkResult com os vencedores")]
         public async Task CompararCartas_ReturnsOkResult_WithVencedores()
         {
+            _logger.Information("Executando teste: CompararCartas_ReturnsOkResult_WithVencedores");
+
             var jogadores = new List<Jogador>
             {
                 new Jogador { Nome = "Jogador 1", Cartas = new List<Carta> { new Carta { Valor = "ACE" } } },
@@ -197,6 +223,8 @@ namespace Desafio_Jogo_De_Baralho.Testes
         [Fact(DisplayName = "CompararCartas deve retornar OkResult com empate")]
         public async Task CompararCartas_ReturnsOkResult_WithEmpate()
         {
+            _logger.Information("Executando teste: CompararCartas_ReturnsOkResult_WithEmpate");
+
             var jogadores = new List<Jogador>
             {
                 new Jogador { Nome = "Jogador 1", Cartas = new List<Carta> { new Carta { Valor = "ACE" } } },
@@ -267,6 +295,8 @@ namespace Desafio_Jogo_De_Baralho.Testes
         [Fact(DisplayName = "CompararCartas deve retornar BadRequest com valor de carta inválido")]
         public async Task CompararCartas_ReturnsBadRequest_WithInvalidCardValue()
         {
+            _logger.Information("Executando teste: CompararCartas_ReturnsBadRequest_WithInvalidCardValue");
+
             var jogadores = new List<Jogador>
             {
                 new Jogador { Nome = "Jogador 1", Cartas = new List<Carta> { new Carta { Valor = "INVALID" } } }
@@ -292,6 +322,8 @@ namespace Desafio_Jogo_De_Baralho.Testes
         [Fact(DisplayName = "FinalizarJogo deve retornar OkResult com o Baralho finalizado")]
         public async Task FinalizarJogo_ReturnsOkResult_WithBaralho()
         {
+            _logger.Information("Executando teste: FinalizarJogo_ReturnsOkResult_WithBaralho");
+
             var baralho = new Baralho { Id = "deck1", Embaralhado = false, CartasRestantes = 0 };
             _jogoServiceMock.Setup(service => service.FinalizarJogoAsync("deck1")).ReturnsAsync(baralho);
 

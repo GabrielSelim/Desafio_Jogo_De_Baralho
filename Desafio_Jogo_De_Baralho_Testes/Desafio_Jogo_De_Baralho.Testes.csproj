@@ -7,6 +7,7 @@
 
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
+    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
   </PropertyGroup>
 
   <ItemGroup>
@@ -22,7 +23,22 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+     <PackageReference Include="Serilog" Version="2.10.0" />
+     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+  </ItemGroup>	
+
+  <ItemGroup>
     <Using Include="Xunit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="xunit.runner.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

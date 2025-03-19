@@ -14,5 +14,5 @@ COPY Desafio_Jogo_De_Baralho_Testes ./Desafio_Jogo_De_Baralho_Testes
 WORKDIR /app/Desafio_Jogo_De_Baralho_Testes
 RUN dotnet build
 
-# Comando para executar os testes
-CMD ["dotnet", "test"]
+# Defina o comando de entrada para executar os testes
+CMD ["dotnet", "test", "--logger:trx;LogFileName=test_results.trx"]

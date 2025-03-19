@@ -54,3 +54,45 @@ Os testes unitários são implementados para garantir que cada parte da API funcio
 ### Testes de Repositórios
 - **Descrição**: Garantem que as operações de banco de dados estão funcionando corretamente.
 - **Exemplo**: Testar se o repositório de baralhos retorna o baralho correto ao consultar o banco de dados.
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------
+## Executando a API e os Testes com Docker
+
+### Pré-requisitos
+- Docker
+- Docker Compose
+
+### Executando a API
+
+1. **Construa e inicie os serviços Docker:**
+
+   No diretório raiz do projeto, execute o seguinte comando para construir e iniciar os serviços Docker:
+
+   docker-compose up --build
+
+2. **Acessando a API:**
+
+   A API estará disponível em `http://localhost:5000`.
+
+3. **Acessando o Swagger:**
+
+   O Swagger da API estará disponível em `http://localhost:5000/swagger`.
+
+### Executando os Testes
+
+1. **Construa e inicie os serviços Docker:**
+
+   No diretório raiz do projeto, execute o seguinte comando para construir e iniciar os serviços Docker:
+
+   docker-compose up --build
+
+2. **Acessando os Resultados dos Testes:**
+
+   Após a execução dos testes, os resultados serão gerados em um arquivo `test_results.trx` na pasta `TestResults` no diretório raiz do projeto no host.
+
+   Você pode acessar o arquivo de resultados de teste em:
+   ./TestResults/test_results.trx
+
+3. **Exibindo os Resultados dos Testes no Console:**
+
+   Para exibir o conteúdo do arquivo `test_results.trx` no console, você pode usar o seguinte comando
