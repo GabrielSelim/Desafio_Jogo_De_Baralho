@@ -5,7 +5,7 @@ using Desafio_Jogo_De_Baralho.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 
-namespace Desafio_Jogo_De_Baralho.Tests
+namespace Desafio_Jogo_De_Baralho.Testes
 {
     public class JogoControllerTests
     {
