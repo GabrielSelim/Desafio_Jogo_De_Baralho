@@ -9,5 +9,6 @@ namespace Desafio_Jogo_De_Baralho.Interfaces
         Task<Baralho> EmbaralharCartasAsync(string deckId);
         Task<(List<(Jogador jogador, Carta carta)> vencedores, string resultado)> CompararCartasAsync(List<Jogador> jogadores);
         Task<Baralho> FinalizarJogoAsync(string deckId);
+        object CriarResponseCompararCartas(List<(Jogador jogador, Carta carta)> vencedores, string resultado);
     }
 }

@@ -35,7 +35,7 @@ namespace Desafio_Jogo_De_Baralho.Services
             }
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<DistribuirCartasResponse>(content);
-            return result.Cartas;
+            return result!.Cartas;
         }
 
         public async Task<Baralho> EmbaralharCartasAsync(string deckId)

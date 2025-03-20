@@ -1,19 +1,23 @@
-﻿using System.Text.Json.Serialization;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Desafio_Jogo_De_Baralho.Models
 {
     public class Baralho
     {
         [JsonPropertyName("deck_id")]
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
+        [Required]
         [JsonPropertyName("shuffled")]
-        public bool Embaralhado { get; set; }
+        public required bool Embaralhado { get; set; }
 
+        [Required]
         [JsonPropertyName("remaining")]
-        public int CartasRestantes { get; set; }
+        public required int CartasRestantes { get; set; }
 
+        [Required]
         [JsonPropertyName("cards")]
-        public List<Carta> Cartas { get; set; } = new List<Carta>();
+        public required List<Carta> Cartas { get; set; } = new List<Carta>();
     }
 }

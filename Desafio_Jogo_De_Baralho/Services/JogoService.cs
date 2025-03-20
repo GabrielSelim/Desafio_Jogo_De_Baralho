@@ -162,5 +162,11 @@ namespace Desafio_Jogo_De_Baralho.Services
                 throw new ApiException("A API está fora do ar. Tente novamente mais tarde.");
             }
         }
+
+        public object CriarResponseCompararCartas(List<(Jogador jogador, Carta carta)> vencedores, string resultado)
+        {
+            var response = vencedores.Select(v => new { v.jogador.Nome, Carta = v.carta }).ToList();
+            return new { vencedores = response, resultado };
+        }
     }
 }

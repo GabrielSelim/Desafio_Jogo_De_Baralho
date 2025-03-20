@@ -1,8 +1,11 @@
-﻿namespace Desafio_Jogo_De_Baralho.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace Desafio_Jogo_De_Baralho.Models
 {
     public class Jogador
     {
-        public string Nome { get; set; }
-        public List<Carta> Cartas { get; set; } = new List<Carta>();
+        public required string Nome { get; set; }
+
+        public required List<Carta> Cartas { get; set; } = new List<Carta>();
     }
 }
