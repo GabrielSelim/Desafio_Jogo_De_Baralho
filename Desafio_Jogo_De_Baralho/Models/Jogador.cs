@@ -2,7 +2,7 @@
 {
     public class Jogador
     {
-        public string Nome { get; set; }
-        public List<Carta> Cartas { get; set; } = new List<Carta>();
+        public required string Nome { get; set; }
+        public required List<Carta> Cartas { get; set; } = new List<Carta>();
     }
 }

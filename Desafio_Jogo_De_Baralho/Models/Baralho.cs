@@ -5,15 +5,15 @@ namespace Desafio_Jogo_De_Baralho.Models
     public class Baralho
     {
         [JsonPropertyName("deck_id")]
-        public string Id { get; set; }
+        public required string Id { get; set; }
 
         [JsonPropertyName("shuffled")]
-        public bool Embaralhado { get; set; }
+        public required bool Embaralhado { get; set; }
 
         [JsonPropertyName("remaining")]
-        public int CartasRestantes { get; set; }
+        public required int CartasRestantes { get; set; }
 
         [JsonPropertyName("cards")]
-        public List<Carta> Cartas { get; set; } = new List<Carta>();
+        public required List<Carta> Cartas { get; set; } = new List<Carta>();
     }
 }
