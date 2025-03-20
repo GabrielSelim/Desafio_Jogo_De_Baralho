@@ -9,6 +9,7 @@ namespace Desafio_Jogo_De_Baralho.Services
     public class ClienteApiService : IClienteAPIService
     {
         private readonly HttpClient _httpClient;
+        private const string BaseUrl = "https://deckofcardsapi.com/api/deck/";
 
         public ClienteApiService(HttpClient httpClient)
         {
@@ -17,7 +18,7 @@ namespace Desafio_Jogo_De_Baralho.Services
 
         public async Task<Baralho> CriarBaralhoAsync()
         {
-            var response = await _httpClient.GetAsync("https://deckofcardsapi.com/api/deck/new/shuffle/");
+            var response = await _httpClient.GetAsync($"{BaseUrl}new/");
             if (!response.IsSuccessStatusCode)
             {
                 throw new ApiException("Erro ao criar baralho.");
@@ -28,7 +29,7 @@ namespace Desafio_Jogo_De_Baralho.Services
 
         public async Task<List<Carta>> DistribuirCartasAsync(string deckId, int quantidade)
         {
-            var response = await _httpClient.GetAsync($"https://deckofcardsapi.com/api/deck/{deckId}/draw/?count={quantidade}");
+            var response = await _httpClient.GetAsync($"{BaseUrl}{deckId}/draw/?count={quantidade}");
             if (!response.IsSuccessStatusCode)
             {
                 throw new ApiException("Erro ao distribuir cartas.");
@@ -40,7 +41,7 @@ namespace Desafio_Jogo_De_Baralho.Services
 
         public async Task<Baralho> EmbaralharCartasAsync(string deckId)
         {
-            var response = await _httpClient.GetAsync($"https://deckofcardsapi.com/api/deck/{deckId}/shuffle/");
+            var response = await _httpClient.GetAsync($"{BaseUrl}{deckId}/shuffle/");
             if (!response.IsSuccessStatusCode)
             {
                 throw new ApiException("Erro ao embaralhar cartas.");
@@ -51,7 +52,7 @@ namespace Desafio_Jogo_De_Baralho.Services
 
         public async Task<Baralho> FinalizarJogoAsync(string deckId)
         {
-            var response = await _httpClient.GetAsync($"https://deckofcardsapi.com/api/deck/{deckId}/return/");
+            var response = await _httpClient.GetAsync($"{BaseUrl}{deckId}/return/");
             if (!response.IsSuccessStatusCode)
             {
                 throw new ApiException("Erro ao finalizar jogo.");
@@ -62,7 +63,7 @@ namespace Desafio_Jogo_De_Baralho.Services
 
         public async Task<Baralho> ObterBaralhoAsync(string deckId)
         {
-            var response = await _httpClient.GetAsync($"https://deckofcardsapi.com/api/deck/{deckId}");
+            var response = await _httpClient.GetAsync($"{BaseUrl}{deckId}");
             response.EnsureSuccessStatusCode();
             var content = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<Baralho>(content)!;

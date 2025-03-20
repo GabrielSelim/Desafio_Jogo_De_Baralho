@@ -8,12 +8,12 @@ namespace Desafio_Jogo_De_Baralho.Models
         public required string Id { get; set; }
 
         [JsonPropertyName("shuffled")]
-        public required bool Embaralhado { get; set; }
+        public bool Embaralhado { get; set; }
 
         [JsonPropertyName("remaining")]
-        public required int CartasRestantes { get; set; }
+        public int CartasRestantes { get; set; }
 
         [JsonPropertyName("cards")]
-        public required List<Carta> Cartas { get; set; } = new List<Carta>();
+        public List<Carta> Cartas { get; set; } = new List<Carta>();
     }
 }

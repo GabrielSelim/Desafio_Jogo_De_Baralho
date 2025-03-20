@@ -28,22 +28,28 @@ namespace Desafio_Jogo_De_Baralho.Services
 
         public async Task<List<Jogador>> DistribuirCartasAsync(string deckId, int numeroDeJogadores)
         {
-            if (numeroDeJogadores < 2)
-            {
-                throw new ApiException("O número de jogadores deve ser pelo menos 2.");
-            }
-
-            if (numeroDeJogadores > MaxJogadores)
-            {              
-                throw new ApiException($"O número máximo de jogadores é {MaxJogadores}.");
-            }
-
             try
             {
                 var baralho = await _clienteApi.ObterBaralhoAsync(deckId);
+
                 if (baralho == null)
                 {
                     throw new ApiException($"Baralho com ID {deckId} não encontrado.");
+                }
+
+                if (!baralho.Embaralhado)
+                {
+                    throw new ApiException("O baralho precisa ser embaralhado antes de distribuir as cartas.");
+                }
+
+                if (numeroDeJogadores < 2)
+                {
+                    throw new ApiException("O número de jogadores deve ser pelo menos 2.");
+                }
+
+                if (numeroDeJogadores > MaxJogadores)
+                {
+                    throw new ApiException($"O número máximo de jogadores é {MaxJogadores}.");
                 }
 
                 if (baralho.CartasRestantes != 52)
@@ -98,27 +104,25 @@ namespace Desafio_Jogo_De_Baralho.Services
                 { "JACK", 11 }, { "QUEEN", 12 }, { "KING", 13 }, { "ACE", 14 }
             };
 
-            List<(Jogador jogador, Carta carta)> vencedores = new List<(Jogador jogador, Carta carta)>();
+            var vencedores = new List<(Jogador jogador, Carta carta)>();
             int maiorValor = 0;
 
             foreach (var jogador in jogadores)
             {
-                Carta melhorCarta = null;
-                int valorMelhorCarta = 0;
-
-                foreach (var carta in jogador.Cartas)
+                if (jogador.Cartas.Count < 5)
                 {
-                    ValidarCarta(carta, valores);
-
-                    if (valores[carta.Valor] > valorMelhorCarta)
-                    {
-                        valorMelhorCarta = valores[carta.Valor];
-                        melhorCarta = carta;
-                    }
+                    throw new ApiException($"O jogador {jogador.Nome} tem menos de 5 cartas.");
                 }
+
+                var melhorCarta = jogador.Cartas
+                    .Where(carta => ValidarCarta(carta, valores))
+                    .OrderByDescending(carta => valores[carta.Valor])
+                    .FirstOrDefault();
 
                 if (melhorCarta != null)
                 {
+                    int valorMelhorCarta = valores[melhorCarta.Valor];
+
                     if (valorMelhorCarta > maiorValor)
                     {
                         maiorValor = valorMelhorCarta;
@@ -137,7 +141,7 @@ namespace Desafio_Jogo_De_Baralho.Services
             return (vencedores, resultado);
         }
 
-        private void ValidarCarta(Carta carta, Dictionary<string, int> valores)
+        private bool ValidarCarta(Carta carta, Dictionary<string, int> valores)
         {
             if (carta == null || string.IsNullOrEmpty(carta.Valor) || string.IsNullOrEmpty(carta.Naipe) || string.IsNullOrEmpty(carta.Codigo) || string.IsNullOrEmpty(carta.Imagem))
             {
@@ -148,7 +152,10 @@ namespace Desafio_Jogo_De_Baralho.Services
             {
                 throw new ApiException($"Valor de carta inválido: {carta.Valor}");
             }
+
+            return true;
         }
+
 
         public async Task<Baralho> FinalizarJogoAsync(string deckId)
         {
