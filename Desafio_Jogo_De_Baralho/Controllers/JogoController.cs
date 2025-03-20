@@ -64,7 +64,8 @@ namespace Desafio_Jogo_De_Baralho.Controllers
             try
             {
                 var (vencedores, resultado) = await _jogoServico.CompararCartasAsync(jogadores);
-                return Ok(_jogoServico.CriarResponseCompararCartas(vencedores, resultado));
+                var response = _jogoServico.CriarResponseCompararCartas(vencedores, resultado);
+                return Ok(response);
             }
             catch (ApiException ex)
             {

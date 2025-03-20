@@ -24,7 +24,7 @@ namespace Desafio_Jogo_De_Baralho.Services
                 throw new ApiException("Erro ao criar baralho.");
             }
             var content = await response.Content.ReadAsStringAsync();
-            return JsonSerializer.Deserialize<Baralho>(content)!;
+            return JsonSerializer.Deserialize<Baralho>(content);
         }
 
         public async Task<List<Carta>> DistribuirCartasAsync(string deckId, int quantidade)
@@ -44,7 +44,7 @@ namespace Desafio_Jogo_De_Baralho.Services
             var response = await _httpClient.GetAsync($"{BaseUrl}{deckId}/shuffle/");
             if (!response.IsSuccessStatusCode)
             {
-                throw new ApiException("Erro ao embaralhar cartas.");
+                throw new ApiException("Este Baralho não foi encontrado.");
             }
             var content = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<Baralho>(content)!;

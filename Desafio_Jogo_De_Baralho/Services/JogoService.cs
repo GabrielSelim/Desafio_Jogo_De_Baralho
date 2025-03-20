@@ -98,6 +98,11 @@ namespace Desafio_Jogo_De_Baralho.Services
 
         public async Task<(List<(Jogador jogador, Carta carta)> vencedores, string resultado)> CompararCartasAsync(List<Jogador> jogadores)
         {
+            if (jogadores == null || !jogadores.Any())
+            {
+                throw new ApiException("A lista de jogadores não pode ser nula ou vazia.");
+            }
+
             var valores = new Dictionary<string, int>
             {
                 { "2", 2 }, { "3", 3 }, { "4", 4 }, { "5", 5 }, { "6", 6 }, { "7", 7 }, { "8", 8 }, { "9", 9 }, { "10", 10 },
@@ -136,6 +141,11 @@ namespace Desafio_Jogo_De_Baralho.Services
                 }
             }
 
+            if (vencedores.Count == 0)
+            {
+                throw new ApiException("Nenhum vencedor encontrado.");
+            }
+
             string resultado = vencedores.Count > 1 ? "Empate" : "Vitória";
 
             return (vencedores, resultado);
@@ -156,7 +166,6 @@ namespace Desafio_Jogo_De_Baralho.Services
             return true;
         }
 
-
         public async Task<Baralho> FinalizarJogoAsync(string deckId)
         {
             try
@@ -169,7 +178,6 @@ namespace Desafio_Jogo_De_Baralho.Services
                 throw new ApiException("A API está fora do ar. Tente novamente mais tarde.");
             }
         }
-
 
         public object CriarResponseCompararCartas(List<(Jogador jogador, Carta carta)> vencedores, string resultado)
         {
